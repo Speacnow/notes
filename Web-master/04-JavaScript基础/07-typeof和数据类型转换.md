@@ -30,15 +30,15 @@ typeof 这个运算符的返回结果就是变量的类型。那返回结果的�
 
 **返回结果**：
 
-| typeof 的代码写法 | 返回结果  |
-| :---------------- | :-------: |
-| typeof 数字       |  number   |
-| typeof 字符串     |  string   |
-| typeof 布尔型     |  boolean  |
-| typeof 对象       |  object   |
-| typeof 方法       | function  |
-| typeof null       |  object   |
-| typeof undefined  | undefined |
+| typeof 的代码写法 | 返回结果（都是字符串格式） |
+| :---------------- | :------------------------: |
+| typeof 数字       |           number           |
+| typeof 字符串     |           string           |
+| typeof 布尔型     |          boolean           |
+| typeof 对象，数组 |           object           |
+| typeof 方法       |          function          |
+| typeof null       |           object           |
+| typeof undefined  |         undefined          |
 
 备注 1：为啥 `typeof null`的返回值也是 object 呢？因为 null 代表的是**空对象**。
 
