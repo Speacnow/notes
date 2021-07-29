@@ -1,6 +1,6 @@
 # Iterator 和 for...of 循环
 
-（个人理解：iterator接口就是一种规范，规定目标对象或者数组或者其他数据结构，在内部实现一个遍历器**生成器**（默认`[Symbol.iterator]`属性，这个属性就是一个函数），然后外部调用的时候，比如for of  解构赋值，三点运算符展开等，利用生成器生成遍历器（就是`[Symbol.iterator]()`），这个生成器主要有两个特点：1.有next()方法，2.next（）函数的返回值是{value，done}这种对象格式）
+（个人理解：iterator接口就是一种规范，规定目标对象或者数组或者其他数据结构，在内部实现一个遍历器**生成器**（默认`[Symbol.iterator]`属性，这个属性就是一个函数），然后外部调用的时候，比如for of  解构赋值，三点运算符展开等，利用生成器生成遍历器（就是`[Symbol.iterator]()`），这个遍历器主要有两个特点：1.有next()方法，2.next（）函数的返回值是{value，done}这种对象格式）
 
 1. [Iterator（遍历器）的概念](https://es6.ruanyifeng.com/#docs/iterator#Iterator（遍历器）的概念)
 2. [默认 Iterator 接口](https://es6.ruanyifeng.com/#docs/iterator#默认 Iterator 接口)

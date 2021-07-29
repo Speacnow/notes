@@ -41,7 +41,7 @@ https://www.jianshu.com/p/a7550c0e164f
 3. 比如，我在干什么的时候就会使用nextTick，传一个回调函数进去，在里面执行dom操作即可；
 4. 实现方法。。。
 
-### `computed与watch`
+### computed与watch
 
 **watch 属性监听** 是一个对象，键是需要观察的属性，值是对应回调函数，主要用来监听某些特定数据的变化，从而进行某些具体的业务逻辑操作,监听属性的变化，需要在数据变化时执行异步或开销较大的操作时使用
 
@@ -82,19 +82,47 @@ https://juejin.cn/post/6844903887162310669
 
 https://juejin.cn/post/6844903698166988808
 
+**数据劫持结合发布订阅模式**
+
 当一个**Vue**实例创建时，Vue会遍历data选项的属性，用 **Object.defineProperty** 将它们转为 getter/setter并且在内部追踪相关依赖，在属性被访问和修改时通知变化。每个组件实例都有相应的 watcher 程序实例，它会在组件渲染的过程中把属性记录为依赖，之后当依赖项的 setter 被调用时，会通知 watcher重新计算，从而致使它关联的组件得以更新。
+
+当一个**Vue**实例创建时，Observer 监听器深度递归遍历vm实例data对象，对象的每一层利用 **Object.defineProperty** 的 getter/setter监听，并且在内部收集相关依赖（Dep列表收集Watcher），所以在属性被访问和修改时通知变化（setter监听，Dep通知Watcher 触发回调函数），Watcher 触发回调函数更新视图
+
+- Observer 监听器：用来监听属性的变化通知订阅者。Observer会监听对象每一层，每一层都会有一个Dep订阅者列表
+- Watcher 订阅者：收到属性的变化，然后更新视图。初始化时会最先访问data[key]，触发Observer.get监听，Dep会将其收集
+- Dep：订阅者列表。Observer.set会监听data[key]的改变，如果有改变，就让Dep通知每一个Watcher触发其回调函数修改视图
+- Compile 解析器：解析指令，初始化模版，绑定订阅者
 
 ### v-model的实现以及它的实现原理吗？
 
-1. `vue`中双向绑定是一个指令`v-model`，可以绑定一个动态值到视图，同时视图中变化能改变该值。`v-model`是语法糖，默认情况下相于:`value和@input`。
+1. `vue`中双向绑定是一个指令`v-model`，可以绑定一个动态值到视图，同时视图中变化能改变该值。`v-model`是语法糖，默认情况下相于:`:value和@input`。表单改变，数据也改变，数据改变，表单也改变，以下为示意图：
+
+   ![](https://img-blog.csdnimg.cn/20190821175523461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2ppYW5nNzcwMTAzNw==,size_16,color_FFFFFF,t_70)
+
 2. 使用`v-model`可以减少大量繁琐的事件处理代码，提高开发效率，代码可读性也更好
+
 3. 通常在表单项上使用`v-model`
-4. 原生的表单项可以直接使用`v-model`，自定义组件上如果要使用它需要在组件内绑定value并处理输入事件
-5. 我做过测试，输出包含`v-model`模板的组件渲染函数，发现它会被转换为value属性的绑定以及一个事件监听，事件回调函数中会做相应变量更新操作，这说明神奇魔法实际上是vue的编译器完成的。
 
-1. 
+### vnode虚拟DOM
 
-### vnode的理解，compiler和patch的过程
+Virtual DOM是对DOM的抽象,本质上是JavaScript对象,这个对象就是更加轻量级的对DOM的描述.
+
+**首先,我们都知道在前端性能优化的一个秘诀就是尽可能少地操作DOM,不仅仅是DOM相对较慢,更因为频繁变动DOM会造成浏览器的回流或者重回,**这些都是性能的杀手,因此我们需要这一层抽象,在*patch过程*中尽可能地*一次性将差异更新到DOM中*,这样保证了DOM不会出现性能很差的情况.
+
+其次,**现代前端框架的一个基本要求就是无须手动操作DOM**,一方面是因为手动操作DOM无法保证程序*性能*,多人协作的项目中如果review不严格,可能会有开发者写出性能较低的代码,另一方面更重要的是省略手动DOM操作可以*大大提高开发效率*.
+
+最后,也是Virtual DOM最初的目的,就是更好的跨平台,比如Node.js就没有DOM,如果想实现SSR(**服务端渲染**),那么一个方式就是借助Virtual DOM,因为Virtual DOM本身是JavaScript对象.
+
+### compiler和patch的过程
+
+
+
+patcher:例如当`data`中定义了一个变量`a`，并且模板中也使用了它，那么这里生成的`Watcher`就会加入到`a`的订阅者列表中。当`a`发生改变时，对应的订阅者收到变动信息，这时候就会触发`Watcher`的`update`方法，实际`update`最后调用的就是在这里声明的`updateComponent`。
+ 当数据发生改变时会触发回调函数`updateComponent`，`updateComponent`是对`patch`过程的封装。`patch`的本质是将新旧`vnode`进行比较，创建、删除或者更新`DOM`节点/组件实例。
+
+
+
+
 
 ```javascript
 vnode 虚拟DOM节点 创建：
@@ -157,9 +185,13 @@ export function Vnode (){
 
 ### 你怎么理解Vue中的diff算法?
 
+<img src="https://user-gold-cdn.xitu.io/2018/5/19/163777930be304eb?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img" style="zoom: 80%;" />
+
 在js中,渲染真实`DOM`的开销是非常大的, 比如我们修改了某个数据,如果直接渲染到真实`DOM`, 会引起整个`dom`树的重绘和重排。那么有没有可能实现只更新我们修改的那一小块dom而不要更新整个`dom`呢？此时我们就需要先根据真实`dom`生成虚拟`dom`， 当虚拟`dom`某个节点的数据改变后会生成有一个新的`Vnode`, 然后新的`Vnode`和旧的`Vnode`作比较，发现有不一样的地方就直接修改在真实DOM上，然后使旧的`Vnode`的值为新的`Vnode`。
 
-**diff**的过程就是调用`patch`函数，比较新旧节点，一边比较一边给真实的`DOM`打补丁。在采取`diff`算法比较新旧节点的时候，比较只会在同层级进行。 在`patch`方法中，首先进行树级别的比较 `new Vnode`不存在就删除 `old Vnode` `old Vnode` 不存在就增加新的`Vnode` 都存在就执行diff更新 当确定需要执行diff算法时，比较两个`Vnode`，包括三种类型操作：属性更新，文本更新，子节点更新 新老节点均有子节点，则对子节点进行`diff`操作，调用`updatechidren` 如果老节点没有子节点而新节点有子节点，先清空老节点的文本内容，然后为其新增子节点 如果新节点没有子节点，而老节点有子节点的时候，则移除该节点的所有子节点 老新老节点都没有子节点的时候，进行文本的替换
+**diff**的过程就是调用`patch`函数，比较新旧节点，一边比较一边给真实的`DOM`打补丁。在采取`diff`算法比较新旧节点的时候，比较只会在同层级进行。 在`patch`方法中，首先进行树级别的比较 `new Vnode`不存在就删除 `old Vnode`; `old Vnode` 不存在就增加新的`Vnode` ;
+
+都存在就执行diff更新 当确定需要执行diff算法时，比较两个`Vnode`，包括三种类型操作：属性更新，文本更新，子节点更新 新老节点均有子节点，则对子节点进行`diff`操作，调用`updatechidren`; 如果老节点没有子节点而新节点有子节点，先清空老节点的文本内容，然后为其新增子节点; 如果新节点没有子节点，而老节点有子节点的时候，则移除该节点的所有子节点 老新老节点都没有子节点的时候，进行文本的替换
 
 **updateChildren** 将`Vnode`的子节点Vch和oldVnode的子节点oldCh提取出来。 `oldCh和vCh`各有两个头尾的变量`StartIdx和EndIdx`，它们的2个变量相互比较，一共有4种比较方式。如果4种比较都没匹配，如果设置了`key`，就会用`key`进行比较，在比较的过程中，变量会往中间靠，一旦`StartIdx>EndIdx`表明`oldCh和vCh`至少有一个已经遍历完了，就会结束比较。
 
@@ -192,7 +224,6 @@ sourceMap优化
 骨架屏
 PWA
 还可以使用缓存(客户端缓存、服务端缓存)优化、服务端开启gzip压缩等。
-复制代码
 ```
 
 ### 你知道Vue3有哪些新特性吗？它们会带来什么影响？
@@ -211,7 +242,7 @@ PWA
 
 ### 实现双向绑定 Proxy 与 Object.defineProperty 相比优劣如何?
 
-1. **Object.definedProperty**的作用是劫持一个对象的属性，劫持属性的getter和setter方法，在对象的属性发生变化时进行特定的操作。而   Proxy劫持的是整个对象。
+1. **Object.definedProperty**的作用是*劫持一个对象的属性*，劫持属性的getter和setter方法，在对象的属性发生变化时进行特定的操作。而   *Proxy劫持的是整个对象*。
 2. **Proxy**会返回一个代理对象，我们只需要操作新对象即可，而Object.defineProperty只能遍历对象属性直接修改。
 3. **Object.definedProperty**不支持数组，更准确的说是不支持数组的各种API，因为如果仅仅考虑arry[i] = value 这种情况，是可以劫持   的，但是这种劫持意义不大。而Proxy可以支持数组的各种API。
 4. 尽管Object.defineProperty有诸多缺陷，但是其兼容性要好于Proxy。
