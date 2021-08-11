@@ -864,6 +864,8 @@ div 的儿子 p。和 div 的后代 p 的截然不同。
 
 > IE8 开始兼容；IE6、7 都不兼容
 
+https://blog.csdn.net/jwz934738949/article/details/88908132
+
 设置无序列表`<ul>`中的第一个`<li>`为红色：
 
 ```html
