@@ -222,7 +222,9 @@ WebMaster =》 04 =》 17
 
 ### 防抖与节流
 
-个人理解：函数防抖：一段时间一个连续的操作，多次触发事件绑定的回调函数，变为只触发一次。解决方法：将回调函数使用setTimeOut延迟执行，如果又触发了回调函数，则cleartimer(timer),然后再将timer赋值为setTimeout(回调函数)
+个人理解：
+
+函数防抖：**一段时间一个连续的操作，多次触发事件绑定的回调函数，变为只触发一次**。解决方法：将回调函数使用setTimeOut延迟执行，如果又触发了回调函数，则cleartimer(timer),然后再将timer赋值为setTimeout(回调函数)
 
 节流就是一段时间一个连续的操作，定时触发回调函数，解决思路是不利用cleartimer(timer)
 
@@ -369,7 +371,7 @@ function clone(any){
       o[key] = clone(any[key])
     }
     return o;
-  } else if(checkType(any) === 'Array') { // 拷贝数组
+  } else if(checkType(any) === 'Array') { // 拷贝数组 "[object Array]"
     var arr = []
     for(let i = 0,leng = any.length;i<leng;i++) {
       arr[i] = clone(any[i])
@@ -494,7 +496,7 @@ function isObject(obj) {
 
 ### 原型与原型链
 
-  * **每个函数**都有一个prototype属性, 它默认指向一个Object空对象(即称为: **原型对象**)
+  * **每个函数**都有一个prototype属性, 它默认指向一个Object对象(即称为: **原型对象**)
   * 原型对象中有一个属性constructor, **它指向函数对象**
   * 每个函数function都有一个**prototype，即显式原型** 。原型里的constructor又指向函数function
 * 每个实例对象都有一个**\__proto__，可称为隐式原型**
@@ -510,7 +512,7 @@ function isObject(obj) {
 
 - 如果没有则去原型的原型中寻找，直到找到Object对象的原型。
 
-- Object对象的原型没有原型，如果在Object原型中依然没有找到，则返回 null
+- *Object对象的原型没有原型*，如果在Object原型中依然没有找到，则返回 null
 
   *这样可以向上查找属性或方法的链式结构称为原型链*
 
@@ -550,7 +552,7 @@ console.log(instance2.colors); // "red,blue,green"
 
 #### 组合继承
 
-组合继承（有时候也叫伪经典继承）综合了原型链和盗用构造函数，将两者的优点集中了起来。基本的思路是**使用原型链继承方法，而通过盗用构造函数继承实例属性**。这样既可以把方法定义在原型上以实现重用，又可以让每个实例都有自己的属性。
+  
 
 ```js
 function SuperType(name){ 
