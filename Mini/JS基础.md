@@ -665,6 +665,7 @@ function Son(name, book) {
  this.book = book; 
 } 
 inheritPrototype(Son, Father); 
+//将子类的原型的原型设置为父类的原型
    //Son.prototype = Object.create(Father.prototype)
 //Object.setPrototypeOf(Son.prototype,Father.prototype)
 Son.prototype.Reading = function() { 
