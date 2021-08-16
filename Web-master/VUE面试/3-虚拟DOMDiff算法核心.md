@@ -250,6 +250,7 @@ function patchVnode(oldVnode, newVnode) {
 - 3、`oldE 和 newS `使用`sameVnode方法`进行比较，`sameVnode(oldE, newS)`
 - 4、`oldE 和 newE `使用`sameVnode方法`进行比较，`sameVnode(oldE, newE)`
 - 5、如果以上逻辑都匹配不到，再把所有旧子节点的 `key` 做一个映射到旧节点下标的 `key -> index` 表，然后用新 `vnode` 的 `key` 去找出在旧节点中可以复用的位置。
+- <img src="Diff%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83.assets/image-20210816112209375.png" alt="image-20210816112209375" style="zoom:50%;" />
 
 ![截屏2021-08-08 下午2.57.22.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/727b5dd8a3424d22afd9dc5cf0dae05e~tplv-k3u1fbpfcp-watermark.awebp)
 
@@ -461,3 +462,5 @@ add() {
 ![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b39cd5171de148bf898c5c9f50e30268~tplv-k3u1fbpfcp-watermark.awebp)
 
 文章分类
+
+![image-20210816150354691](Diff%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83.assets/image-20210816150354691.png)

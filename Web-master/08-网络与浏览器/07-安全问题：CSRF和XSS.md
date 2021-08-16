@@ -30,7 +30,6 @@ CSRF（Cross-site request forgery）：**跨站请求伪造**。
 
 PS：中文名一定要记住。英文全称，如果记不住也拉倒。
 
-
 ### 2、CSRF的攻击原理
 
 ![](http://img.smyhvae.com/20180307_1735.png)

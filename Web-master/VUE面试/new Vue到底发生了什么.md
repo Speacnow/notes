@@ -1,27 +1,37 @@
 # new Vue到底发生了什么（2.0）
 
+https://blog.csdn.net/hd101367816/article/details/113731138
+
+**(ps:初始化init:生命周期、事件、 props、 methods、 data、 computed 与 watch 等**
+
+**模板编译虚拟节点==>diff算法**
+
+**挂载,渲染时触发依赖收集,将vnode变为Dom)**
+
+**从`new Vue()`开始 => `init`初始化Vue => `$mount`挂载 => `complier`编译模板 => `render`渲染VNode => `update`更新DOM => `patch`DOM打补丁 => DOM**
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2021022421443921.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hkMTAxMzY3ODE2,size_16,color_FFFFFF,t_70#pic_center)
+
 ### Vue 实例
 
 每个 Vue 应用都是通过用 Vue 函数创建一个新的 Vue 实例开始的：
 
-```
+```js
 var vm = new Vue({
   // 选项
 })
 复制代码
 ```
 
-一个 Vue 应用由一个通过 new Vue 创建的根 Vue 实例，以及可选的嵌套的、可复用的组件树组成。当一个 Vue 实例被创建时，它将 data 对象中的所有的属性加入到 Vue 的响应式系统中。当这些属性的值发生改变时，视图将会产生“响应”，即匹配更新为新的值。当这些数据改变时，视图会进行重渲染。
+一个 Vue 应用由一个通过 *new Vue 创建的根 Vue 实例*，以及可选的嵌套的、可复用的*组件*树组成。当一个 Vue 实例被创建时，它将 data 对象中的所有的属性加入到 Vue 的响应式系统中。当这些属性的值发生改变时，视图将会产生“响应”，即匹配更新为新的值。当这些数据改变时，视图会进行重渲染。
 
 ### 初始化及挂载
 
-在 new Vue() 之后。 Vue 会调用 _init 函数进行初始化，也就是这里的 init 过程，它会初始化生命周期、事件、 props、 methods、 data、 computed 与 watch 等。其中最重要的是通过 Object.defineProperty 设置 setter 与 getter 函数，用来实现「响应式」以及「依赖收集」。
+在 new Vue() 之后。 
 
+Vue 会调用 _init 函数进行初始化，*也就是这里的 init 过程*，它会初始化生命周期、事件、 props、 methods、 data、 computed 与 watch 等。其中最重要的是通过 Object.defineProperty 设置 setter 与 getter 函数，用来实现「响应式」以及「依赖收集」。
 
-
-![img](https://user-gold-cdn.xitu.io/2019/6/25/16b8f3a55dd6dde2?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
-
-初始化之后调用 $mount 会挂载组件，如果是运行时编译，即不存在 render function 但是存在 template 的情况，需要进行「编译」步骤。
+*初始化之后调用 $mount 会挂载组件*，如果是运行时编译，即不存在 render function 但是存在 template 的情况，需要进行「编译」步骤。
 
 
 
@@ -106,3 +116,4 @@ render function 会被转化成 VNode 节点。Virtual DOM 其实就是一棵以
 事实上。vue2并没有实现节点上vdom更新，在vue3上才有望实现（2019vueconf大会尤雨奚）
 
 new vue 初始化-mounted挂载-compile-render-createElement虚拟节点-(返回普通vnode或者createcomponents创建一个组件vnode，这个节点是vue的一个子类,总之返回的都是vnode，这个vnode可能有若干个子节点，它们也是vnode类型，这里就可以描述为vnode-tree)-update->patch(createElm作用是，如果vnode是普通的节点就创建真实的dom节点插入父元素下，如果节点vnode 的tag标明是组件，根据vnode创建一个组件节点，并且执行相应的钩子函数，这个过程就是遍历所有的子vnode,如果它的子节点vnode又是个组件，重复刚才的过程render-创建虚拟节点，这个过程是一个深度优先遍历的算法。
+
