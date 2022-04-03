@@ -18,7 +18,7 @@
 
 Promise 是异步编程的一种解决方案，比传统的解决方案——回调函数和事件——更合理和更强大。它由社区最早提出和实现，ES6 将其写进了语言标准，统一了用法，原生提供了`Promise`对象。
 
-所谓`Promise`，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。
+所谓`Promise`，简单说就是一个容器，**里面保存着某个未来才会结束的事件（通常是一个异步操作，比如setTimeout）的结果**。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。
 
 `Promise`对象有以下两个特点。
 
@@ -163,7 +163,7 @@ getJSON("/posts.json").then(function(json) {
 
 上面代码中，`getJSON`是对 XMLHttpRequest 对象的封装，用于发出一个针对 JSON 数据的 HTTP 请求，并且返回一个`Promise`对象。需要注意的是，在`getJSON`内部，`resolve`函数和`reject`函数调用时，都带有参数。
 
-**如果调用`resolve`函数和`reject`函数时带有参数，那么它们的参数会被传递给回调函数。**`reject`函数的参数通常是`Error`对象的实例，表示抛出的错误；`resolve`函数的参数除了正常的值以外，还可能是另一个 Promise 实例，比如像下面这样。
+**如果调用`resolve`函数和`reject`函数时带有参数，那么它们的参数会被传递给回调函数。**`reject`函数的参数通常是`Error`对象的实例，表示抛出的错误；`resolve`函数的参数除了正常的值以外，**还可能是另一个 Promise 实例**，比如像下面这样。
 
 ```javascript
 const p1 = new Promise(function (resolve, reject) {
@@ -195,7 +195,7 @@ p2
 // Error: fail
 ```
 
-上面代码中，`p1`是一个 Promise，3 秒之后变为`rejected`。`p2`的状态在 1 秒之后改变，`resolve`方法返回的是`p1`。由于`p2`返回的是另一个 Promise，导致`p2`自己的状态无效了，由`p1`的状态决定`p2`的状态。所以，后面的`then`语句都变成针对后者（`p1`）。又过了 2 秒，`p1`变为`rejected`，导致触发`catch`方法指定的回调函数。
+上面代码中，`p1`是一个 Promise，3 秒之后变为`rejected`。`p2`的状态在 1 秒之后改变，`resolve`方法返回的是`p1`。由于`p2`返回的是另一个 Promise，导致`p2`自己的状态无效了，由`p1`的状态决定`p2`的状态。所以，后面的`then`语句都变成针对后者（`p1`）。*又过了 2 秒*，`p1`变为`rejected`，导致触发`catch`方法指定的回调函数。
 
 注意，调用`resolve`或`reject`并不会终结 Promise 的参数函数的执行。
 
